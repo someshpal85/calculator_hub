@@ -1,0 +1,25 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# Test coverage & logs
+coverage/
+*.log
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor temporary files
+.vscode/
+.idea/
+*.swp
+*.swo
