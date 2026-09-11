@@ -353,14 +353,14 @@ details.faq-item p { margin: 10px 0 0; color: var(--muted); }
 .footer-bottom { color: var(--muted); font-size: 12.5px; margin-top: 30px; }
 
 /* Keypad calculators (basic/scientific) */
-.calc-display { background: var(--card-2); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 14px; }
+.calc-display { background: var(--card-2); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 14px; min-height: 88px; display: flex; flex-direction: column; justify-content: center; }
 .calc-input {
   background: transparent; border: none; outline: none;
-  color: var(--text); font-size: 22px; width: 100%;
-  text-align: right; padding: 0; caret-color: var(--accent);
-  font-family: inherit;
+  color: var(--text); font-size: 28px; width: 100%;
+  text-align: right; padding: 8px 0; caret-color: var(--accent);
+  font-family: inherit; min-height: 44px;
 }
-.calc-preview { text-align: right; font-size: 24px; font-weight: 700; min-height: 32px; margin-top: 6px; word-break: break-all; }
+.calc-preview { text-align: right; font-size: 20px; font-weight: 600; min-height: 24px; margin-top: 4px; word-break: break-all; color: var(--muted); }
 .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .keypad.sci { grid-template-columns: repeat(5, 1fr); }
 .keypad button { padding: 16px 0; font-size: 19px; background: var(--card-2); color: var(--text); font-weight: 700; border-radius: 4px; justify-content: center; text-align: center; }

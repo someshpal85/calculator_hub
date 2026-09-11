@@ -119,7 +119,10 @@ export default function ExpressionCalculator({ variant }: { variant: "basic" | "
           spellCheck={false}
           inputMode="text"
         />
-        <div className="calc-preview" aria-live="polite">{preview || "\u00A0"}</div>
+        {preview && preview !== expression.trim() && !hasError && (
+          <div className="calc-preview" aria-live="polite">= {preview}</div>
+        )}
+        {!preview && <div className="calc-preview" aria-hidden>{"\u00A0"}</div>}
       </div>
       {(error || (hasError && expression.trim())) && (
         <p className="error-box">⚠️ {error || "Invalid expression — check parentheses and operators."}</p>
