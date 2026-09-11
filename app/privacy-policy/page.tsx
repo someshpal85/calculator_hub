@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
-  description: "CalcSphere's privacy-first approach: calculations run in your browser; no accounts, no stored inputs.",
+  description: "Calculator ProHub's privacy-first approach: calculations run in your browser; no accounts, no stored inputs.",
   path: "/privacy-policy",
 });
 
@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
   return (
     <LegalPage title="Privacy Policy">
       <p>
-        CalcSphere is engineered so that we <em>cannot</em> misuse your data — because we don&apos;t
+        Calculator ProHub is engineered so that we <em>cannot</em> misuse your data — because we don&apos;t
         collect it in the first place.
       </p>
       <h2>What happens to numbers you enter</h2>
@@ -37,7 +37,7 @@ export default function PrivacyPolicy() {
         not your amounts.
       </p>
       <h2>Contact</h2>
-      <p>Privacy questions: privacy@calcsphere.example.com</p>
+      <p>Privacy questions: privacy@Calculator ProHub.example.com</p>
     </LegalPage>
   );
 }

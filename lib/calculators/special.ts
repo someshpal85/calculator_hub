@@ -75,7 +75,7 @@ export const SPECIAL_CALCULATORS: CalculatorDefinition[] = [
     ],
     faqs: [
       { q: "Why isn't my currency listed?", a: "The ECB reference set covers ~30 freely-traded currencies. Exotic pairs would require additional data sources with different licensing." },
-      { q: "Can I use this offline?", a: "No — this is the one CalcSphere tool needing internet, since rates change daily. Everything else works fully offline." },
+      { q: "Can I use this offline?", a: "No — this is the one Calculator ProHub tool needing internet, since rates change daily. Everything else works fully offline." },
     ],
     relatedSlugs: ["length-converter", "weight-converter", "salary-calculator"],
     seoTitle: "Currency Converter — Live ECB Exchange Rates",

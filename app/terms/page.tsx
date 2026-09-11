@@ -4,17 +4,17 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = pageMetadata({
   title: "Terms of Use",
-  description: "The terms governing your use of CalcSphere's free online calculators.",
+  description: "The terms governing your use of Calculator ProHub's free online calculators.",
   path: "/terms",
 });
 
 export default function Terms() {
   return (
     <LegalPage title="Terms of Use">
-      <p>By using CalcSphere you agree to these terms. They are intentionally short.</p>
+      <p>By using Calculator ProHub you agree to these terms. They are intentionally short.</p>
       <h2>1. Service provided as-is</h2>
       <p>
-        CalcSphere provides free calculator tools without warranty of any kind — express or
+        Calculator ProHub provides free calculator tools without warranty of any kind — express or
         implied, including merchantability and fitness for a particular purpose. Availability may be
         interrupted; formulas may contain errors despite our testing.
       </p>
@@ -32,7 +32,7 @@ export default function Terms() {
       </ul>
       <h2>4. Limitation of liability</h2>
       <p>
-        To the maximum extent permitted by law, CalcSphere and its operators are not liable for any
+        To the maximum extent permitted by law, Calculator ProHub and its operators are not liable for any
         damages arising from use of — or reliance on — results produced by the site.
       </p>
       <h2>5. Changes</h2>

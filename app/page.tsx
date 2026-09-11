@@ -28,7 +28,7 @@ const STEPS = [
 
 const FAQS = [
   {
-    q: "Is CalcSphere free to use?",
+    q: "Is Calculator ProHub free to use?",
     a: "Yes — every calculator is completely free with no registration. The site is supported by unobtrusive advertising that never interferes with calculations.",
   },
   {
@@ -136,7 +136,7 @@ export default function HomePage() {
 
       {/* Why */}
       <section className="section" aria-labelledby="why-h">
-        <h2 id="why-h">Why Use CalcSphere?</h2>
+        <h2 id="why-h">Why Use Calculator ProHub?</h2>
         <div className="feature-grid" style={{ marginTop: 16 }}>
           {WHY.map(([icon, title, desc]) => (
             <div key={title} className="panel" style={{ padding: 18 }}>

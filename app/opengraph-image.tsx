@@ -4,7 +4,7 @@ import { ImageResponse } from "next/og";
 // assets, no embedded URLs (domain-independent by design).
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "CalcSphere — Smart Calculators for Everyday Decisions";
+export const alt = "Calculator ProHub — Smart Calculators for Everyday Decisions";
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -39,7 +39,7 @@ export default function OpengraphImage() {
           ∑
         </div>
         <div style={{ display: "flex", fontSize: 76, fontWeight: 800, letterSpacing: "-2px" }}>
-          CalcSphere
+          Calculator ProHub
         </div>
         <div
           style={{

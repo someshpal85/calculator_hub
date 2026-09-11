@@ -5,8 +5,8 @@ import type { MetadataRoute } from "next";
 // no service worker exists in this phase.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "CalcSphere — Smart Calculators for Everyday Decisions",
-    short_name: "CalcSphere",
+    name: "Calculator ProHub — Smart Calculators for Everyday Decisions",
+    short_name: "Calculator ProHub",
     description:
       "Free online calculators for finance, loans, tax, salary, health, math, education, conversions and everyday life.",
     start_url: "/",

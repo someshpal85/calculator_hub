@@ -1,4 +1,4 @@
-// CalcSphere — universal calculator engine types.
+// Calculator ProHub — universal calculator engine types.
 // Every calculator is a pure data definition: inputs + calculate + content.
 // UI is rendered once by <CalculatorRunner def={...} />.
 

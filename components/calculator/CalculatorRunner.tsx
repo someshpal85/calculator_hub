@@ -177,7 +177,7 @@ function GenericRunner({ def }: { def: CalculatorDefinition }) {
       if (navigator.share) {
         await navigator.share({
           title: def.name,
-          text: `${def.name} — CalcSphere`,
+          text: `${def.name} — Calculator ProHub`,
           url: window.location.href,
         });
         return;

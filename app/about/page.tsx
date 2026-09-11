@@ -3,16 +3,16 @@ import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = pageMetadata({
-  title: "About CalcSphere",
+  title: "About Calculator ProHub",
   description: "Who we are and why we built a faster, privacy-first calculator platform.",
   path: "/about",
 });
 
 export default function About() {
   return (
-    <LegalPage title="About CalcSphere">
+    <LegalPage title="About Calculator ProHub">
       <p>
-        CalcSphere exists for one reason: getting a trustworthy answer to an everyday calculation
+        Calculator ProHub exists for one reason: getting a trustworthy answer to an everyday calculation
         should take seconds, not sign-ups. We were tired of calculator websites that bury the tool
         under popups, demand personal details, or hide the formula behind vague marketing.
       </p>

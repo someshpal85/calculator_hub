@@ -8,7 +8,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "All Calculators — Complete Directory",
   description:
-    "Browse every free CalcSphere calculator: finance, loans, tax, salary, math, health, education, conversions and everyday tools. Search and filter instantly.",
+    "Browse every free Calculator ProHub calculator: finance, loans, tax, salary, math, health, education, conversions and everyday tools. Search and filter instantly.",
   path: "/calculators",
 });
 
@@ -17,7 +17,7 @@ export default function CalculatorsPage() {
     <div style={{ paddingTop: 24 }}>
       <h1>All Calculators</h1>
       <p className="subtitle">
-        The complete CalcSphere directory. Search by name or keyword (Hindi works too), filter by
+        The complete Calculator ProHub directory. Search by name or keyword (Hindi works too), filter by
         category, or sort alphabetically.
       </p>
       <AdSlot slot="directory-top" />

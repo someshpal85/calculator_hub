@@ -74,7 +74,7 @@ export default function Header({ items }: { items: SearchItem[] }) {
       <div className="container header-inner">
         <Link href="/" className="logo">
           <span className="logo-mark" aria-hidden>∑</span>
-          CalcSphere
+          Calculator ProHub
         </Link>
         <nav className="main-nav" aria-label={tr("a11y.mainNav")}>
           <Link href="/" className="nav-desktop" aria-current={pathname === "/" ? "page" : undefined}>{tr("nav.home")}</Link>
@@ -106,7 +106,7 @@ export function Footer({ categoryLinks }: { categoryLinks: { slug: string; name:
       <div className="container">
         <div className="footer-grid">
           <div>
-            <h4>CalcSphere</h4>
+            <h4>Calculator ProHub</h4>
             <p style={{ color: "var(--muted)", fontSize: 13.5 }}>{tr("footer.blurb")}</p>
           </div>
           <div>

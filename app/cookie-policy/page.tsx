@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = pageMetadata({
   title: "Cookie Policy",
-  description: "How CalcSphere uses (and mostly avoids) cookies and browser storage.",
+  description: "How Calculator ProHub uses (and mostly avoids) cookies and browser storage.",
   path: "/cookie-policy",
 });
 
@@ -13,7 +13,7 @@ export default function CookiePolicy() {
     <LegalPage title="Cookie Policy">
       <h2>The short version</h2>
       <p>
-        CalcSphere sets no tracking cookies today. We use two items of browser local storage:
+        Calculator ProHub sets no tracking cookies today. We use two items of browser local storage:
       </p>
       <ul>
         <li><code>cs-theme</code> — remembers light/dark mode preference.</li>

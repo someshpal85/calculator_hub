@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </LocaleProvider>
         <noscript>
           <p style={{ textAlign: "center", padding: 20 }}>
-            CalcSphere calculators need JavaScript for live results.{" "}
+            Calculator ProHub calculators need JavaScript for live results.{" "}
             <Link href="/calculators">Browse the directory</Link> to pick one.
           </p>
         </noscript>

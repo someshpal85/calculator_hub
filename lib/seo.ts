@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const SITE = {
-  name: "CalcSphere",
+  name: "Calculator ProHub",
   tagline: "Smart Calculators for Everyday Decisions",
   description:
     "Free online calculators for finance, loans, tax, salary, health, math, education, conversions and everyday life. Instant results, no sign-up — everything runs in your browser.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://calcsphere.example.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://calculator-prohub.com",
 };
 
 export function absoluteUrl(path: string): string {

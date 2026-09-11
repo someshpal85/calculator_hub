@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = pageMetadata({
   title: "Disclaimer",
-  description: "Financial, tax, health and construction estimate disclaimers for CalcSphere results.",
+  description: "Financial, tax, health and construction estimate disclaimers for Calculator ProHub results.",
   path: "/disclaimer",
 });
 
@@ -12,7 +12,7 @@ export default function Disclaimer() {
   return (
     <LegalPage title="Disclaimer">
       <p>
-        Every result on CalcSphere is an estimate produced by standard published formulas applied to
+        Every result on Calculator ProHub is an estimate produced by standard published formulas applied to
         the values you enter. Real-world outcomes differ. Category-specific notes:
       </p>
       <h2>💰 Financial calculators</h2>

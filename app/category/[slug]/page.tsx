@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/Layout";
@@ -19,7 +19,7 @@ export async function generateMetadata(
   if (!cat) return {};
   return pageMetadata({
     title: `${cat.name} Calculators — Free Online Tools`,
-    description: `${cat.description} Browse all free ${cat.name.toLowerCase()} calculators on CalcSphere.`,
+    description: `${cat.description} Browse all free ${cat.name.toLowerCase()} calculators on Calculator ProHub.`,
     path: `/category/${slug}`,
   });
 }

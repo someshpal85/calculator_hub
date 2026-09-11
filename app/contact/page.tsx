@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact",
-  description: "Reach the CalcSphere team for feedback, corrections and partnership queries.",
+  description: "Reach the Calculator ProHub team for feedback, corrections and partnership queries.",
   path: "/contact",
 });
 
@@ -13,10 +13,10 @@ export default function Contact() {
     <LegalPage title="Contact">
       <p>We read everything. Typical response time: 2–3 working days.</p>
       <ul>
-        <li><strong>General &amp; feedback</strong>: hello@calcsphere.example.com</li>
-        <li><strong>Formula corrections</strong>: corrections@calcsphere.example.com — include the calculator name, your inputs and expected result.</li>
-        <li><strong>Advertising partnerships</strong>: partners@calcsphere.example.com</li>
-        <li><strong>Privacy requests</strong>: privacy@calcsphere.example.com</li>
+        <li><strong>General &amp; feedback</strong>: hello@Calculator ProHub.example.com</li>
+        <li><strong>Formula corrections</strong>: corrections@Calculator ProHub.example.com — include the calculator name, your inputs and expected result.</li>
+        <li><strong>Advertising partnerships</strong>: partners@Calculator ProHub.example.com</li>
+        <li><strong>Privacy requests</strong>: privacy@Calculator ProHub.example.com</li>
       </ul>
       <h2>Suggest a calculator</h2>
       <p>
