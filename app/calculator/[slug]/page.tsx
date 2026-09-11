@@ -7,7 +7,6 @@ import { CategoryBreadcrumb, AdSlot } from "@/components/Layout";
 import { CALCULATORS, getCalculator, getByCategory, getRelated } from "@/lib/calculators";
 import { getCategory } from "@/data/categories";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
-import { track } from "@/lib/analytics";
 
 export function generateStaticParams() {
   return CALCULATORS.map((c) => ({ slug: c.slug }));
@@ -75,8 +74,6 @@ export default async function CalculatorPage({
           })),
         }
       : null;
-
-  track("calculator_view", { slug });
 
   return (
     <article>

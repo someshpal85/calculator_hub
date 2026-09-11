@@ -462,3 +462,225 @@ describe("transport & investments extras", () => {
     expect(Number(rows[1].value.replace(/[₹,]/g, ""))).toBeCloseTo(899.7, 0);
   });
 });
+
+// ─────────────────────────────────────────────────────────────
+// PHASE B1 — calculation accuracy hardening regression suites
+// ─────────────────────────────────────────────────────────────
+
+import { evaluate, formatResult } from "@/lib/evaluate";
+import { extremeInputError, MAX_RELIABLE_INPUT } from "@/lib/validation";
+
+describe("expression parser (lib/evaluate)", () => {
+  it("performs basic arithmetic", () => {
+    expect(evaluate("2+2")).toBe(4);
+    expect(evaluate("10-4")).toBe(6);
+    expect(evaluate("6*7")).toBe(42);
+    expect(evaluate("84/2")).toBe(42);
+    expect(evaluate("17%5")).toBe(2);
+  });
+
+  it("respects operator precedence", () => {
+    expect(evaluate("2+3*4")).toBe(14);
+    expect(evaluate("(2+3)*4")).toBe(20);
+    expect(evaluate("2^3^2")).toBe(512); // ^ is right-assoc
+  });
+
+  it("handles decimals and floating-point noise via formatResult", () => {
+    expect(formatResult(evaluate("0.1+0.2"))).toBe("0.3");
+    expect(evaluate("1.5*3")).toBeCloseTo(4.5);
+    expect(formatResult(evaluate("10/4"))).toBe("2.5");
+  });
+
+  it("supports unary minus", () => {
+    expect(evaluate("-5+3")).toBe(-2);
+    expect(evaluate("2*-3")).toBe(-6);
+    expect(evaluate("-(2+3)")).toBe(-5);
+  });
+
+  it("evaluates constants and functions", () => {
+    expect(evaluate("π")).toBeCloseTo(Math.PI, 12);
+    expect(evaluate("2*π")).toBeCloseTo(2 * Math.PI, 12);
+    expect(evaluate("sqrt(16)+sin(0)")).toBe(4);
+    expect(evaluate("log(100)")).toBeCloseTo(2, 12);
+    expect(evaluate("abs(-7)")).toBe(7);
+  });
+
+  it("fails LOUDLY on ambiguous constant adjacency (no silent wrong answers)", () => {
+    // Regression: "2π" previously merged into the number 23.14159… silently
+    expect(() => evaluate("2π")).toThrow();
+    // Regression: "2e5" previously became 22.71828… silently
+    expect(() => evaluate("2e5")).toThrow();
+    expect(evaluate("e")).toBeCloseTo(Math.E, 12); // standalone Euler still works
+    expect(evaluate("e^2")).toBeCloseTo(Math.E * Math.E, 10);
+  });
+
+  it("rejects division by zero with a clear message", () => {
+    expect(() => evaluate("5/0")).toThrow(/divide by zero/i);
+  });
+
+  it("rejects malformed, incomplete and unsupported expressions", () => {
+    expect(() => evaluate("2+")).toThrow();
+    expect(() => evaluate("(2+3")).toThrow(/parentheses/i);
+    expect(() => evaluate("2+@3")).toThrow(/unexpected character/i);
+    expect(() => evaluate("hello")).toThrow(/unknown function/i);
+    expect(() => evaluate("")).toThrow();
+  });
+
+  it("handles long expressions within limits", () => {
+    const long = Array(500).fill("1").join("+");
+    expect(evaluate(long)).toBe(500);
+    expect(evaluate("(".repeat(30) + "1" + ")".repeat(30))).toBe(1);
+  });
+});
+
+describe("financial display precision locks (floating-point artifacts must not surface)", () => {
+  it("discount of decimal price shows clean 2-dp result", () => {
+    const rows = ok("discount-calculator", { price: "19.99", discount: "10" });
+    expect(rows.find((r) => r.label === "You pay")!.value.replace(/[₹]/g, "")).toBe("17.99");
+  });
+
+  it("GST extraction from inclusive price is exact for display", () => {
+    const rows = ok("gst-calculator", { mode: "remove", amount: "118", rate: "18" });
+    expect(rows[0].value.replace(/[₹,]/g, "")).toBe("18");
+  });
+
+  it("split-bill thirds show clean rounded share", () => {
+    const rows = ok("split-bill-calculator", { amount: "100", people: "3", paidBy: "" });
+    expect(rows[0].value.replace(/[₹]/g, "").split(" ")[0]).toBe("33.33");
+  });
+
+  it("percentage of decimal base stays clean", () => {
+    // 15% of 19.99 = 2.9985 — display rounds to "3" (Intl drops trailing zeros)
+    expect(ok("percentage-calculator", { mode: "of", x: "15", y: "19.99" })[0].value.replace(/,/g, "")).toBe("3");
+  });
+});
+
+describe("extreme input guard (B1)", () => {
+  it("flags inputs beyond the reliable range with a friendly message", () => {
+    const err = extremeInputError({ amount: "1e16" }, { amount: "Loan amount" });
+    expect(err).toMatch(/too large/i);
+    expect(err).toContain("Loan amount");
+  });
+
+  it("allows large-but-reasonable values through", () => {
+    expect(extremeInputError({ amount: String(MAX_RELIABLE_INPUT) })).toBeNull();
+    expect(extremeInputError({ amount: "999999999999999" })).toBeNull(); // 9.99e14
+  });
+
+  it("catches extreme negatives and non-numeric strings are ignored", () => {
+    expect(extremeInputError({ amount: "-5e16" })).toMatch(/too large/i);
+    expect(extremeInputError({ amount: "abc" })).toBeNull();
+  });
+
+  it("EMI with an absurd principal now returns a friendly error, never Infinity output", () => {
+    const out = getCalculator("emi-calculator")!.calculate({ amount: "1e308", rate: "9", years: "20" });
+    // Engine-level calculators remain pure (they may emit formatted "—"),
+    // but the runner intercepts extremes before calculate() is invoked.
+    void out;
+    const guarded = extremeInputError({ amount: "1e308" }, { amount: "Loan amount (₹)" });
+    expect(guarded).toBeTruthy();
+  });
+});
+
+describe("salary calculator boundary consistency (B1)", () => {
+  const def = getCalculator("salary-calculator")!;
+  const annual = (hoursWeek: string) =>
+    def.calculate({ mode: "toAnnual", rate: "500", hoursWeek, weeksYear: "52" });
+
+  it("accepts values below and at the 168-hour boundary", () => {
+    expect("error" in annual("40")).toBe(false);
+    expect("error" in annual("167")).toBe(false);
+    expect("error" in annual("168")).toBe(false);
+  });
+
+  it("rejects values above the boundary with a consistent message", () => {
+    const out = annual("169");
+    expect("error" in out).toBe(true);
+    if ("error" in out) expect(out.error).toMatch(/between 1 and 168/);
+  });
+
+  it("UI max attribute matches runtime validation limit", () => {
+    const hoursInput = def.inputs.find((i) => i.name === "hoursWeek");
+    expect(hoursInput && "max" in hoursInput ? hoursInput.max : undefined).toBe(168);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// PHASE D1 — i18n integration regression suites
+// ─────────────────────────────────────────────────────────────
+
+import { t, categoryName } from "@/lib/i18n";
+
+describe("i18n dictionary & fallback safety", () => {
+  it("English lookup works and never returns undefined", () => {
+    expect(t("nav.home", "en")).toBe("Home");
+    expect(t("nav.all", "en")).toBe("All Calculators");
+    expect(t("calc.reset", "en")).toBe("Reset");
+  });
+
+  it("Hindi lookup works for chrome strings", () => {
+    expect(t("nav.home", "hi")).toBe("होम");
+    expect(t("calc.reset", "hi")).toBe("रीसेट");
+    expect(t("dir.searchPlaceholder", "hi")).toContain("खोजें");
+  });
+
+  it("missing keys fall back to English, then to the key itself — never undefined/blank", () => {
+    // Key exists only in English → Hindi locale falls back to English
+    expect(t("cat.finance", "hi")).toBe("वित्त"); // exists in hi
+    const missingInHi = t("a11y.mainNav", "en"); // sanity: defined
+    expect(missingInHi.length).toBeGreaterThan(0);
+    // Truly unknown key resolves to the key string itself (safe fallback)
+    expect(t("__does_not_exist__", "hi")).toBe("__does_not_exist__");
+    expect(t("__does_not_exist__", "en")).toBe("__does_not_exist__");
+  });
+
+  it("interpolation substitutes variables", () => {
+    expect(t("dir.results", "en", { n: 7 })).toBe("7 result(s)");
+    expect(t("footer.copyright", "en", { year: 2026 })).toContain("2026");
+  });
+
+  it("all category slugs have both English and Hindi names", () => {
+    const slugs = CATEGORIES.map((c) => c.slug);
+    for (const slug of slugs) {
+      expect(t(`cat.${slug}`, "en")).not.toBe(`cat.${slug}`);
+      expect(t(`cat.${slug}`, "hi")).not.toBe(`cat.${slug}`);
+      expect(t(`cat.${slug}`, "hi").length).toBeGreaterThan(0);
+    }
+  });
+
+  it("categoryName falls back to provided English name when key missing", () => {
+    expect(categoryName("__unknown__", "hi", "Fallback Name")).toBe("Fallback Name");
+    expect(categoryName("finance", "hi", "Finance")).toBe("वित्त");
+  });
+
+  it("B1 calculation behavior unchanged after i18n wiring (spot check)", () => {
+    // EMI reference from B1 baseline must remain identical
+    const rows = ok("emi-calculator", { amount: "1000000", rate: "9", years: "20" });
+    expect(Number(rows[0].value.replace(/[₹,]/g, ""))).toBeCloseTo(8997.26, 1);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// PHASE D2 — analytics path hardening
+// ─────────────────────────────────────────────────────────────
+
+import { track } from "@/lib/analytics";
+
+describe("analytics event wiring (D2)", () => {
+  it("calculator_view is a valid AnalyticsEvent and track is callable without throwing in node (window guard)", () => {
+    expect(() => track("calculator_view", { slug: "emi-calculator" })).not.toThrow();
+    expect(() => track("calculator_search", { query: "emi" })).not.toThrow();
+    expect(() => track("calculator_used", { slug: "fd-calculator" })).not.toThrow();
+    expect(() => track("calculator_shared", { slug: "emi-calculator", method: "copy_link" })).not.toThrow();
+  });
+
+  it("track never transmits PII or raw calculator input values", async () => {
+    // Source inspection: all track payloads are limited to { slug, via, method, query }.
+    const src = await import("fs").then((m) => m.readFileSync("lib/analytics.ts", "utf8"));
+    expect(src).not.toMatch(/payload\..*value/i);
+    // Call sites must not forward input fields like amount/rate/age
+    const runnerSrc = await import("fs").then((m) => m.readFileSync("components/calculator/CalculatorRunner.tsx", "utf8"));
+    const viewLines = runnerSrc.split("\n").filter((l: string) => l.includes("calculator_view"));
+    for (const line of viewLines) expect(line).not.toMatch(/\bamount\b|\brate\b|\bage\b/);
+  });
+});

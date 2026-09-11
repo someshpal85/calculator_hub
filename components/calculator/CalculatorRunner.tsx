@@ -6,6 +6,8 @@ import type { CalculatorDefinition, CalcOutput } from "@/lib/types";
 import { isCalcError } from "@/lib/types";
 import { getCalculator } from "@/lib/calculators";
 import { CURRENCIES, getActiveCurrency, setActiveCurrency } from "@/lib/format";
+import { extremeInputError } from "@/lib/validation";
+import { useLocale } from "@/components/LocaleProvider";
 import ExpressionCalculator from "./ExpressionCalculator";
 import CurrencyConverterWidget from "./CurrencyConverter";
 import { track } from "@/lib/analytics";
@@ -47,6 +49,7 @@ export default function CalculatorRunner({ slug }: { slug: string }) {
 }
 
 function GenericRunner({ def }: { def: CalculatorDefinition }) {
+  const { tr } = useLocale();
   const searchParams = useSearchParams();
   const defaults = useMemo(() => defaultsOf(def), [def]);
 
@@ -63,11 +66,12 @@ function GenericRunner({ def }: { def: CalculatorDefinition }) {
   }, [def, defaults]);
 
   const [values, setValues] = useState<Record<string, string>>(() => ({ ...defaults }));
-  const [currency, setCurrency] = useState("INR");
+  const [currency, setCurrency] = useState("USD");
   const [copied, setCopied] = useState<"result" | "link" | null>(null);
   const usedTracked = useRef(false);
 
   // Prefill from shareable URL (?amount=…&rate=…) once on mount.
+  // Also emits the primary calculator_view event — normal view vs share-URL view.
   useEffect(() => {
     const incoming: Record<string, string> = {};
     for (const input of def.inputs) {
@@ -77,6 +81,8 @@ function GenericRunner({ def }: { def: CalculatorDefinition }) {
     if (Object.keys(incoming).length > 0) {
       setValues((prev) => ({ ...prev, ...incoming }));
       track("calculator_view", { slug: def.slug, via: "share_url" });
+    } else {
+      track("calculator_view", { slug: def.slug });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -86,6 +92,10 @@ function GenericRunner({ def }: { def: CalculatorDefinition }) {
   const activeSymbol = CURRENCIES.find((c) => c.code === currency)?.symbol ?? "₹";
   const result: CalcOutput = useMemo(() => {
     try {
+      const labelMap: Record<string, string> = {};
+      for (const input of def.inputs) labelMap[input.name] = input.label;
+      const extreme = extremeInputError(values, labelMap);
+      if (extreme) return { error: extreme };
       setActiveCurrency(currency);
       return def.calculate(values);
     } catch {
@@ -134,7 +144,7 @@ function GenericRunner({ def }: { def: CalculatorDefinition }) {
 
   const reset = () => {
     setValues({ ...defaults });
-    setCurrency("INR");
+    setCurrency("USD");
     try {
       const url = new URL(window.location.href);
       for (const input of def.inputs) url.searchParams.delete(input.name);
@@ -268,7 +278,7 @@ function GenericRunner({ def }: { def: CalculatorDefinition }) {
       </div>
 
       <div style={{ display: "flex", gap: 8 }}>
-        <button type="button" onClick={reset} disabled={!hasValues}>Reset</button>
+        <button type="button" onClick={reset} disabled={!hasValues}>{tr("calc.reset")}</button>
       </div>
 
       {/* Results */}
@@ -300,19 +310,19 @@ function GenericRunner({ def }: { def: CalculatorDefinition }) {
                 {result.note && <p className="result-note">{withSymbol(result.note)}</p>}
                 <div className="share-actions">
                   <button type="button" className="secondary" onClick={() => copy("result")}>
-                    {copied === "result" ? "Copied ✓" : "📋 Copy result"}
+                    {copied === "result" ? "✓" : `📋 ${tr("calc.copyResult")}`}
                   </button>
                   <button type="button" className="secondary" onClick={() => copy("link")}>
-                    {copied === "link" ? "Copied ✓" : "🔗 Copy link"}
+                    {copied === "link" ? "✓" : `🔗 ${tr("calc.copyLink")}`}
                   </button>
                   <a className="btn secondary" href={whatsappHref} target="_blank" rel="noopener noreferrer">
-                    WhatsApp
+                    {tr("calc.whatsapp")}
                   </a>
                   <a className="btn secondary" href={telegramHref} target="_blank" rel="noopener noreferrer">
-                    Telegram
+                    {tr("calc.telegram")}
                   </a>
                   <button type="button" className="secondary" onClick={nativeShare}>
-                    ↗ Share…
+                    ↗ {tr("calc.share")}
                   </button>
                 </div>
               </>

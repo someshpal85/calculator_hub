@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { SearchItem } from "@/lib/calculators";
 import { track } from "@/lib/analytics";
+import { useLocale } from "./LocaleProvider";
 
 function score(item: SearchItem, q: string): number {
   const name = item.name.toLowerCase();
@@ -34,6 +35,8 @@ export default function CalculatorSearch({
   const [open, setOpen] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { tr } = useLocale();
+  const placeholderText = placeholder ?? tr("search.placeholder");
 
   const results = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -72,7 +75,7 @@ export default function CalculatorSearch({
         aria-label="Search calculators"
         aria-autocomplete="list"
         autoComplete="off"
-        placeholder={placeholder}
+        placeholder={placeholderText}
         value={q}
         onChange={(e) => {
           setQ(e.target.value);

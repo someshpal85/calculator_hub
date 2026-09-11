@@ -24,7 +24,7 @@ export const BUSINESS_CALCULATORS: CalculatorDefinition[] = [
         defaultValue: "toAnnual",
       },
       { kind: "number", name: "rate", label: "Rate (per hour / per year)", min: 0.01, placeholder: "e.g. 500", defaultValue: 500 },
-      { kind: "number", name: "hoursWeek", label: "Hours per week", min: 1, max: 100, step: 1, placeholder: "e.g. 40", defaultValue: 40 },
+      { kind: "number", name: "hoursWeek", label: "Hours per week", min: 1, max: 168, step: 1, placeholder: "e.g. 40", defaultValue: 40 },
       { kind: "number", name: "weeksYear", label: "Working weeks per year", min: 1, max: 52, step: 1, placeholder: "e.g. 52", defaultValue: 52 },
     ],
     calculate(v) {
@@ -138,8 +138,8 @@ export const BUSINESS_CALCULATORS: CalculatorDefinition[] = [
           ],
           note: "The Payment of Gratuity Act requires at least 5 continuous years of service.",
         };
-      // Service is counted to the nearest completed year; 7y6m+ rounds to 8.
-      const roundedYears = Math.floor(years + (years % 1 >= 0.5 ? 0 : 0)); // user enters completed years
+      // Service is counted to the nearest completed year (user enters completed years).
+      const roundedYears = Math.floor(years);
       const gratuity = ((15 / 26) * basicDA * roundedYears);
       const capped = Math.min(gratuity, 2000000);
       return {

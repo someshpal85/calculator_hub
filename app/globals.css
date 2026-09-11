@@ -150,8 +150,8 @@ select, textarea {
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: var(--radius-sm);
-  padding: 11px 14px;
-  font-size: 15.5px;
+  padding: 8px 12px;
+  font-size: 14px;
   outline: none;
   width: 100%;
   font-family: inherit;
@@ -165,25 +165,25 @@ select { appearance: auto; }
   border-radius: var(--radius);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
-  padding: 24px;
+  padding: 16px;
 }
-@media (max-width: 600px) { .panel { padding: 18px; } }
+@media (max-width: 600px) { .panel { padding: 12px; } }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
 
 .card {
   background: var(--card);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  padding: 18px 20px;
+  padding: 14px 16px;
   text-decoration: none;
   transition: transform 0.15s ease, border-color 0.15s ease;
   display: block;
 }
 .card:hover { transform: translateY(-2px); border-color: var(--accent); }
-.card h3 { margin: 8px 0 4px; font-size: 16.5px; }
-.card p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.45; }
-.card .icon { font-size: 26px; }
+.card h3 { margin: 6px 0 3px; font-size: 15.5px; }
+.card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+.card .icon { font-size: 22px; }
 .badge {
   display: inline-block;
   background: var(--accent-soft);
@@ -211,14 +211,14 @@ h2 { letter-spacing: -0.01em; }
 .breadcrumbs .sep { opacity: 0.5; }
 
 /* ── Calculator page layout ─────────────────────────────── */
-.calc-layout { display: grid; grid-template-columns: 1.25fr 1fr; gap: 18px; align-items: start; }
+.calc-layout { display: grid; grid-template-columns: 1.25fr 1fr; gap: 12px; align-items: start; }
 @media (max-width: 860px) { .calc-layout { grid-template-columns: 1fr; } }
 
-.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-.field label { font-weight: 600; font-size: 14px; }
-.field .hint { color: var(--muted); font-size: 12.5px; }
-.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-.row > .field { margin-bottom: 14px; }
+.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.field label { font-weight: 600; font-size: 13px; }
+.field .hint { color: var(--muted); font-size: 12px; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
+.row > .field { margin-bottom: 10px; }
 
 .error-box {
   background: color-mix(in srgb, var(--danger) 9%, var(--card));
@@ -235,24 +235,24 @@ h2 { letter-spacing: -0.01em; }
   background: linear-gradient(135deg, var(--accent), #7c5bff);
   color: #fff;
   border-radius: var(--radius);
-  padding: 20px 22px;
-  margin-bottom: 12px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
 }
-.result-main .label { font-size: 13.5px; opacity: 0.85; }
-.result-main .value { font-size: clamp(24px, 4vw, 32px); font-weight: 800; letter-spacing: -0.01em; word-break: break-word; }
-.result-secondary { display: grid; gap: 8px; }
+.result-main .label { font-size: 12.5px; opacity: 0.85; }
+.result-main .value { font-size: clamp(20px, 3.5vw, 26px); font-weight: 800; letter-spacing: -0.01em; word-break: break-word; }
+.result-secondary { display: grid; gap: 6px; }
 .result-row {
-  display: flex; justify-content: space-between; gap: 14px;
+  display: flex; justify-content: space-between; gap: 10px;
   background: var(--card-2);
   border-radius: var(--radius-sm);
-  padding: 11px 14px;
-  font-size: 14.5px;
+  padding: 8px 12px;
+  font-size: 13px;
 }
 .result-row .k { color: var(--muted); }
 .result-row .v { font-weight: 700; text-align: right; word-break: break-word; }
-.result-note { color: var(--muted); font-size: 13px; margin-top: 10px; }
-.share-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-.share-actions button { font-size: 13.5px; padding: 8px 13px; }
+.result-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.share-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.share-actions button { font-size: 12px; padding: 6px 10px; }
 
 /* Content sections */
 .prose p { color: var(--text); opacity: 0.92; margin: 0 0 12px; }
@@ -328,7 +328,7 @@ details.faq-item p { margin: 10px 0 0; color: var(--muted); }
 .search-dropdown .n { font-weight: 600; }
 .search-dropdown .d { color: var(--muted); font-size: 12.5px; }
 .pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
-.pill-row .btn { border-radius: 999px; font-size: 13.5px; padding: 7px 14px; }
+.pill-row .btn { border-radius: 8px; font-size: 12px; padding: 6px 12px; }
 
 .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
 .step-num {
@@ -363,11 +363,19 @@ details.faq-item p { margin: 10px 0 0; color: var(--muted); }
 .calc-preview { text-align: right; font-size: 24px; font-weight: 700; min-height: 32px; margin-top: 6px; word-break: break-all; }
 .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .keypad.sci { grid-template-columns: repeat(5, 1fr); }
-.keypad button { padding: 13px 0; font-size: 16.5px; background: var(--card-2); color: var(--text); font-weight: 500; }
+.keypad button { padding: 16px 0; font-size: 19px; background: var(--card-2); color: var(--text); font-weight: 700; border-radius: 4px; justify-content: center; text-align: center; }
 .keypad button.op { color: var(--accent); font-weight: 700; }
-.keypad button.fn { color: var(--success); font-size: 14px; }
+.keypad button.fn { color: var(--success); font-size: 16px; }
 .keypad button.eq { background: var(--accent); color: var(--accent-contrast); grid-column: span 2; }
 .keypad button.danger { background: color-mix(in srgb, var(--danger) 12%, var(--card-2)); color: var(--danger); }
+
+/* Home dual calculator */
+.home-calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.home-calc-compact .calc-input { font-size: 18px; }
+.home-calc-compact .calc-preview { font-size: 20px; min-height: 26px; }
+.home-calc-compact .keypad button { padding: 12px 0; font-size: 17px; border-radius: 4px; }
+.home-calc-compact .keypad.sci button { font-size: 14px; padding: 10px 0; }
+@media (max-width: 768px) { .home-calc-grid { grid-template-columns: 1fr; } }
 
 /* Utility */
 .text-center { text-align: center; }

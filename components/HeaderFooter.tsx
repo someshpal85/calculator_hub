@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { SearchItem } from "@/lib/calculators";
 import CalculatorSearch from "./CalculatorSearch";
-import { CATEGORIES } from "@/data/categories";
+import { useLocale } from "./LocaleProvider";
+import type { Locale } from "@/lib/i18n";
 
 function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -39,8 +40,34 @@ function ThemeToggle() {
   );
 }
 
+function LanguageSwitcher() {
+  const { locale, setLocale, tr } = useLocale();
+  return (
+    <div className="field" style={{ marginBottom: 0 }}>
+      <select
+        aria-label={tr("lang.label")}
+        value={locale}
+        onChange={(e) => setLocale(e.target.value as Locale)}
+        style={{ width: "auto", padding: "7px 10px", fontSize: 13 }}
+      >
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="zh">中文</option>
+        <option value="pt">Português</option>
+        <option value="ru">Русский</option>
+        <option value="ja">日本語</option>
+        <option value="tr">Türkçe</option>
+      </select>
+    </div>
+  );
+}
+
 export default function Header({ items }: { items: SearchItem[] }) {
   const pathname = usePathname();
+  const { tr } = useLocale();
 
   return (
     <header className="site-header">
@@ -49,16 +76,17 @@ export default function Header({ items }: { items: SearchItem[] }) {
           <span className="logo-mark" aria-hidden>∑</span>
           CalcSphere
         </Link>
-        <nav className="main-nav" aria-label="Main navigation">
-          <Link href="/" className="nav-desktop" aria-current={pathname === "/" ? "page" : undefined}>Home</Link>
+        <nav className="main-nav" aria-label={tr("a11y.mainNav")}>
+          <Link href="/" className="nav-desktop" aria-current={pathname === "/" ? "page" : undefined}>{tr("nav.home")}</Link>
           <Link href="/calculators" className="nav-desktop" aria-current={pathname === "/calculators" ? "page" : undefined}>
-            All Calculators
+            {tr("nav.all")}
           </Link>
-          <Link href="/#popular" className="nav-desktop">Popular</Link>
-          <Link href="/#categories" className="nav-desktop">Categories</Link>
+          <Link href="/#popular" className="nav-desktop">{tr("nav.popular")}</Link>
+          <Link href="/#categories" className="nav-desktop">{tr("nav.categories")}</Link>
         </nav>
         <div className="header-actions">
-          <CalculatorSearch items={items} placeholder="Search…" />
+          <CalculatorSearch items={items} />
+          <LanguageSwitcher />
           <ThemeToggle />
         </div>
       </div>
@@ -67,28 +95,31 @@ export default function Header({ items }: { items: SearchItem[] }) {
 }
 
 export function Footer({ categoryLinks }: { categoryLinks: { slug: string; name: string }[] }) {
+  const { tr, locale } = useLocale();
+  const catName = (slug: string, fallback: string) => {
+    const key = `cat.${slug}`;
+    const translated = tr(key);
+    return translated === key ? fallback : translated;
+  };
   return (
     <footer className="site-footer">
       <div className="container">
         <div className="footer-grid">
           <div>
             <h4>CalcSphere</h4>
-            <p style={{ color: "var(--muted)", fontSize: 13.5 }}>
-              Smart calculators for everyday decisions — free, instant and privacy-friendly.
-              All calculations run in your browser; nothing you enter is stored.
-            </p>
+            <p style={{ color: "var(--muted)", fontSize: 13.5 }}>{tr("footer.blurb")}</p>
           </div>
           <div>
-            <h4>Categories</h4>
+            <h4>{tr("footer.categories")}</h4>
             <ul>
               {categoryLinks.slice(0, 6).map((c) => (
-                <li key={c.slug}><a href={`/category/${c.slug}`}>{c.name}</a></li>
+                <li key={c.slug}><a href={`/category/${c.slug}`}>{catName(c.slug, c.name)}</a></li>
               ))}
-              <li><a href="/calculators">Browse all →</a></li>
+              <li><a href="/calculators">{tr("footer.browseAll")}</a></li>
             </ul>
           </div>
           <div>
-            <h4>Popular</h4>
+            <h4>{tr("footer.popular")}</h4>
             <ul>
               <li><a href="/calculator/emi-calculator">EMI Calculator</a></li>
               <li><a href="/calculator/sip-calculator">SIP Calculator</a></li>
@@ -98,7 +129,7 @@ export function Footer({ categoryLinks }: { categoryLinks: { slug: string; name:
             </ul>
           </div>
           <div>
-            <h4>Company &amp; Legal</h4>
+            <h4>{tr("footer.company")}</h4>
             <ul>
               <li><a href="/about">About</a></li>
               <li><a href="/contact">Contact</a></li>
@@ -110,10 +141,7 @@ export function Footer({ categoryLinks }: { categoryLinks: { slug: string; name:
             </ul>
           </div>
         </div>
-        <div className="footer-bottom">
-          © {new Date().getFullYear()} CalcSphere. Results are estimates for informational purposes only —
-          not financial, tax or medical advice.
-        </div>
+        <div className="footer-bottom">{tr("footer.copyright", { year: new Date().getFullYear() })}</div>
       </div>
     </footer>
   );

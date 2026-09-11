@@ -57,8 +57,17 @@ function applyFn(name: string, stack: number[]): void {
 }
 
 export function evaluate(expression: string): number {
-  // Normalize display symbols
-  const src = expression.replace(/×/g, "*").replace(/÷/g, "/").replace(/π/g, String(Math.PI)).replace(/e(?![a-z])/gi, String(Math.E));
+  // Normalize display symbols.
+  // π and standalone e are paren-wrapped so they can never silently merge
+  // with adjacent digits ("2π" must fail loudly as implicit multiplication,
+  // not parse as the number 23.14…). Scientific-notation-style "2e5" is left
+  // untouched and rejected by the tokenizer as an unknown name — again loud,
+  // never a wrong answer.
+  const src = expression
+    .replace(/×/g, "*")
+    .replace(/÷/g, "/")
+    .replace(/π/g, `(${Math.PI})`)
+    .replace(/(?<![\d])e(?![a-z])/gi, `(${Math.E})`);
 
   const tokens: Token[] = [];
   let i = 0;

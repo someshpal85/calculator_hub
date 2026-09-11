@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { HeroSearch } from "@/components/CalculatorSearch";
 import { AdSlot } from "@/components/Layout";
+import HomeCalculator from "@/components/home/HomeCalculator";
 import { CALCULATORS, categoryCounts, getPopular, getByCategory, getSearchItems } from "@/lib/calculators";
 import { CATEGORIES } from "@/data/categories";
 import { SITE } from "@/lib/seo";
@@ -95,6 +96,8 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      <HomeCalculator />
 
       <AdSlot slot="header-banner" />
 

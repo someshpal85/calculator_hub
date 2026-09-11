@@ -242,7 +242,6 @@ export const EVERYDAY_CALCULATORS: CalculatorDefinition[] = [
       ] as { label: string; value: string; emphasis?: boolean }[];
       const paid = num(v.paidBy);
       if (paid !== null && paid >= 0) {
-        const balance = share * people === 0 ? 0 : paid - share;
         rows.push({
           label: "Your settlement",
           value:
@@ -253,7 +252,6 @@ export const EVERYDAY_CALCULATORS: CalculatorDefinition[] = [
                 : `You owe ${inr(share - paid)}`,
           emphasis: true,
         });
-        void balance;
       }
       return { rows };
     },

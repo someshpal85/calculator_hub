@@ -8,6 +8,7 @@ import { HEALTH_CALCULATORS } from "./health";
 import { EVERYDAY_CALCULATORS } from "./everyday";
 import { CONVERSION_CALCULATORS } from "./conversion";
 import { TRANSPORT_CALCULATORS } from "./transport";
+import { EXTRA_CALCULATORS } from "./extra";
 import { SPECIAL_CALCULATORS } from "./special";
 
 export * from "@/lib/types";
@@ -21,6 +22,7 @@ export const CALCULATORS: CalculatorDefinition[] = [
   ...EVERYDAY_CALCULATORS,
   ...CONVERSION_CALCULATORS,
   ...TRANSPORT_CALCULATORS,
+  ...EXTRA_CALCULATORS,
   ...SPECIAL_CALCULATORS,
 ].filter((c) => c.published);
 

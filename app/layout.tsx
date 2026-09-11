@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
 import Header, { Footer } from "@/components/HeaderFooter";
+import { LocaleProvider } from "@/components/LocaleProvider";
 import { getSearchItems } from "@/lib/calculators";
 import { CATEGORIES } from "@/data/categories";
 import { SITE } from "@/lib/seo";
@@ -41,9 +42,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
       <body>
-        <Header items={items} />
-        <main className="container">{children}</main>
-        <Footer categoryLinks={categoryLinks} />
+        <LocaleProvider>
+          <Header items={items} />
+          <main className="container">{children}</main>
+          <Footer categoryLinks={categoryLinks} />
+        </LocaleProvider>
         <noscript>
           <p style={{ textAlign: "center", padding: 20 }}>
             CalcSphere calculators need JavaScript for live results.{" "}

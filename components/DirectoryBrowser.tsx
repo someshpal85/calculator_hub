@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { SearchItem } from "@/lib/calculators";
 import { track } from "@/lib/analytics";
+import { useLocale } from "./LocaleProvider";
 
 type SortKey = "popular" | "az" | "category";
 
@@ -15,6 +16,12 @@ export default function DirectoryBrowser({ items, categories }: {
   const [cat, setCat] = useState("all");
   const [sort, setSort] = useState<SortKey>("popular");
   const [visible, setVisible] = useState(24);
+  const { tr } = useLocale();
+  const catName = (slug: string, fallback: string) => {
+    const key = `cat.${slug}`;
+    const translated = tr(key);
+    return translated === key ? fallback : translated;
+  };
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -51,8 +58,8 @@ export default function DirectoryBrowser({ items, categories }: {
       <div className="filters">
         <input
           type="search"
-          placeholder={`Search ${items.length} calculators…`}
-          aria-label="Search the directory"
+          placeholder={tr("dir.searchPlaceholder")}
+          aria-label={tr("dir.searchPlaceholder")}
           value={q}
           onChange={(e) => {
             setQ(e.target.value);
@@ -60,32 +67,32 @@ export default function DirectoryBrowser({ items, categories }: {
             track("calculator_search", { query: e.target.value.slice(0, 40), context: "directory" });
           }}
         />
-        <select aria-label="Filter by category" value={cat} onChange={(e) => setCat(e.target.value)}>
-          <option value="all">All categories</option>
+        <select aria-label={tr("dir.allCategories")} value={cat} onChange={(e) => setCat(e.target.value)}>
+          <option value="all">{tr("dir.allCategories")}</option>
           {categories.map((c) => (
             <option key={c.slug} value={c.slug}>
-              {c.icon} {c.name}
+              {c.icon} {catName(c.slug, c.name)}
             </option>
           ))}
         </select>
         <select
-          aria-label="Sort"
+          aria-label={tr("dir.sortPopular")}
           value={sort}
           onChange={(e) => setSort(e.target.value as SortKey)}
         >
-          <option value="popular">Most popular</option>
-          <option value="az">A → Z</option>
-          <option value="category">By category</option>
+          <option value="popular">{tr("dir.sortPopular")}</option>
+          <option value="az">{tr("dir.sortAZ")}</option>
+          <option value="category">{tr("dir.sortCategory")}</option>
         </select>
       </div>
 
       {filtered.length === 0 ? (
         <p className="muted" style={{ padding: 30, textAlign: "center" }}>
-          No calculators match “{q}”. Try a shorter term or clear the category filter.
+          {q ? tr("dir.noResults") : tr("dir.noResults")}
         </p>
       ) : (
         <>
-          <p className="muted">{filtered.length} result{filtered.length === 1 ? "" : "s"}</p>
+          <p className="muted">{tr("dir.results", { n: filtered.length })}</p>
           <div className="grid">
             {filtered.slice(0, visible).map((c) => (
               <Link key={c.slug} href={`/calculator/${c.slug}`} className="card">
@@ -93,8 +100,8 @@ export default function DirectoryBrowser({ items, categories }: {
                 <h3>{c.name}</h3>
                 <p>{c.description}</p>
                 <p style={{ marginTop: 10 }}>
-                  <span className="badge">{c.categoryName}</span>{" "}
-                  {c.popularity >= 85 && <span className="badge">🔥 Popular</span>}
+                  <span className="badge">{catName(c.category, c.categoryName)}</span>{" "}
+                  {c.popularity >= 85 && <span className="badge">🔥 {tr("nav.popular")}</span>}
                 </p>
               </Link>
             ))}
@@ -102,7 +109,7 @@ export default function DirectoryBrowser({ items, categories }: {
           {visible < filtered.length && (
             <div style={{ textAlign: "center", marginTop: 22 }}>
               <button className="secondary" onClick={() => setVisible((v) => v + 24)} type="button">
-                Show more ({filtered.length - visible} remaining)
+                {tr("dir.showMore", { n: filtered.length - visible })}
               </button>
             </div>
           )}
