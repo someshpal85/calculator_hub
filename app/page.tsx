@@ -21,7 +21,7 @@ const WHY = [
 ];
 
 const STEPS = [
-  ["Choose a calculator", "Browse by category or search by name — including Hindi keywords like “कर्ज” or “जीएसटी”."],
+  ["Choose a calculator", "Browse by category or search by name — try “emi”, “gst” or “bmi”."],
   ["Enter your values", "Clear labels with sensible examples; results update as you type."],
   ["Get instant answers", "See the main result up front with supporting breakdowns you can copy or share."],
 ];
