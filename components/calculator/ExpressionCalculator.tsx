@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { evaluate, formatResult } from "@/lib/evaluate";
 
 const BASIC_KEYS: { label: string; action?: "digit" | "op" | "clear" | "back" | "equals"; cls?: string }[] = [
@@ -62,6 +62,18 @@ const SCI_KEYS: { label: string; action?: "digit" | "op" | "clear" | "back" | "e
 export default function ExpressionCalculator({ variant }: { variant: "basic" | "sci" }) {
   const [expression, setExpression] = useState("");
   const [error, setError] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (document.activeElement === inputRef.current) return;
+      if (/^[0-9.+\-*/%()]$/.test(e.key) || e.key === "Enter" || e.key === "Backspace") {
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   let preview = "";
   let hasError = false;
@@ -78,21 +90,22 @@ export default function ExpressionCalculator({ variant }: { variant: "basic" | "
     switch (key.action) {
       case "clear":
         setExpression("");
-        return;
+        break;
       case "back":
         setExpression((e) => e.slice(0, -1));
-        return;
+        break;
       case "equals":
-        if (!expression.trim()) return;
+        if (!expression.trim()) break;
         try {
           setExpression(formatResult(evaluate(expression)));
         } catch (e) {
           setError(e instanceof Error ? e.message : "Invalid expression");
         }
-        return;
+        break;
       default:
         setExpression((e) => e + key.label);
     }
+    requestAnimationFrame(() => inputRef.current?.focus());
   };
 
   const keys = variant === "sci" ? SCI_KEYS : BASIC_KEYS;
@@ -101,6 +114,7 @@ export default function ExpressionCalculator({ variant }: { variant: "basic" | "
     <div>
       <div className="calc-display">
         <input
+          ref={inputRef}
           className="calc-input"
           aria-label="Expression"
           value={expression}

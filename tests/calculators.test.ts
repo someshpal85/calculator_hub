@@ -684,3 +684,22 @@ describe("analytics event wiring (D2)", () => {
     for (const line of viewLines) expect(line).not.toMatch(/\bamount\b|\brate\b|\bage\b/);
   });
 });
+
+describe("extra tax calculators", () => {
+  it("TDS professional fees 10%", () => {
+    const rows = ok("tds-calculator", { section: "10", amount: "100000" });
+    expect(rows[0].value.replace(/[₹,]/g, "")).toBe("10,000".replace(/,/g, ""));
+  });
+  it("HRA exemption least-of-three (metro)", () => {
+    const rows = ok("hra-calculator", { basic: "600000", hra: "240000", rent: "300000", city: "metro", regime: "old" });
+    expect(Number(rows[0].value.replace(/[₹,]/g, ""))).toBe(240000);
+  });
+  it("HRA zero under new regime", () => {
+    const rows = ok("hra-calculator", { basic: "600000", hra: "240000", rent: "300000", city: "metro", regime: "new" });
+    expect(rows[0].value.replace(/[₹,]/g, "")).toBe("0");
+  });
+  it("equity LTCG with 1.25L exemption", () => {
+    const rows = ok("capital-gains-calculator", { asset: "equity", holding: "long", buy: "400000", sell: "650000" });
+    expect(Number(rows[1].value.replace(/[₹,]/g, ""))).toBeCloseTo((250000 - 125000) * 0.125, 0);
+  });
+});

@@ -2,6 +2,7 @@ import type { CalculatorDefinition } from "@/lib/types";
 import { CATEGORIES } from "@/data/categories";
 import { FINANCE_CALCULATORS } from "./finance";
 import { TAX_CALCULATORS } from "./tax";
+import { TAX_EXTRA_CALCULATORS } from "./tax-extra";
 import { BUSINESS_CALCULATORS } from "./business";
 import { MATH_CALCULATORS } from "./math";
 import { HEALTH_CALCULATORS } from "./health";
@@ -16,6 +17,7 @@ export * from "@/lib/types";
 export const CALCULATORS: CalculatorDefinition[] = [
   ...FINANCE_CALCULATORS,
   ...TAX_CALCULATORS,
+  ...TAX_EXTRA_CALCULATORS,
   ...BUSINESS_CALCULATORS,
   ...MATH_CALCULATORS,
   ...HEALTH_CALCULATORS,

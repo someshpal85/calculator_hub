@@ -74,7 +74,8 @@ a { color: inherit; }
   align-items: center;
   gap: 9px;
   font-weight: 800;
-  font-size: 19px;
+  font-size: 22px;
+  font-family: "MS Mincho", "Noto Serif JP", serif;
   text-decoration: none;
   letter-spacing: -0.02em;
 }
