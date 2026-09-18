@@ -112,7 +112,7 @@ export function Footer({ categoryLinks }: { categoryLinks: { slug: string; name:
           <div>
             <h4>{tr("footer.categories")}</h4>
             <ul>
-              {categoryLinks.slice(0, 6).map((c) => (
+              {categoryLinks.map((c) => (
                 <li key={c.slug}><a href={`/category/${c.slug}`}>{catName(c.slug, c.name)}</a></li>
               ))}
               <li><a href="/calculators">{tr("footer.browseAll")}</a></li>
