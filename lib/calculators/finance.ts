@@ -540,4 +540,62 @@ export const FINANCE_CALCULATORS: CalculatorDefinition[] = [
     relatedSlugs: ["gst-calculator", "percentage-calculator", "split-bill-calculator"],
     seoTitle: "Discount Calculator — Sale Price & Savings",
   },
+
+  {
+    slug: "ppf-calculator",
+    name: "PPF Calculator",
+    icon: "🪙",
+    category: "investments",
+    description: "PPF maturity value, total deposits and tax-free interest at current 7.1% rate.",
+    keywords: ["ppf", "public provident fund", "ppf interest rate", "ppf maturity", "पीपीएफ"],
+    popularity: 92,
+    published: true,
+    inputs: [
+      { kind: "number", name: "deposit", label: "Yearly deposit (₹)", min: 500, max: 150000, step: 1000, placeholder: "e.g. 150000", defaultValue: 150000 },
+      { kind: "number", name: "rate", label: "Interest rate (% per year)", min: 0.1, step: 0.1, placeholder: "e.g. 7.1", defaultValue: 7.1 },
+      { kind: "number", name: "years", label: "Duration (years, min 15)", min: 15, max: 50, step: 1, placeholder: "e.g. 15", defaultValue: 15 },
+    ],
+    calculate(v) {
+      const dep = num(v.deposit);
+      const rate = num(v.rate);
+      const yrs = num(v.years);
+      if (dep === null || dep < 500 || dep > 150000)
+        return { error: "Yearly deposit must be between ₹500 and ₹1,50,000." };
+      if (rate === null || rate <= 0 || rate > 15)
+        return { error: "Please enter a valid interest rate (0–15%)." };
+      if (yrs === null || yrs < 15 || yrs > 50)
+        return { error: "PPF duration must be 15–50 years (15-year lock-in, extendable in 5-year blocks)." };
+      const n = Math.round(yrs);
+      const r = rate / 100;
+      // Deposits assumed at the start of each financial year (April), annual compounding.
+      const fv = dep * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+      const invested = dep * n;
+      return {
+        rows: [
+          { label: "Maturity value (tax-free)", value: money(fv), emphasis: true },
+          { label: "Total deposits", value: inr0(invested) },
+          { label: "Total interest earned", value: inr0(fv - invested) },
+          { label: "Interest as % of deposits", value: pct(((fv - invested) / invested) * 100, 1) },
+        ],
+        note: `${n} yearly deposits of ${inr0(dep)} at ${pct(rate)} compounded annually.`,
+      };
+    },
+    formula: "FV = D × (((1+r)^n − 1) ÷ r) × (1+r), where D = yearly deposit, r = annual rate, n = years (deposits at year-start).",
+    about: [
+      "The Public Provident Fund (PPF) is India's flagship tax-saving scheme with EEE status — deposits qualify for 80C deduction, interest is tax-free, and maturity is tax-free. Accounts mature after 15 financial years and can be extended in 5-year blocks with or without fresh deposits.",
+      "Interest is compounded yearly and credited each March 31, calculated on the lowest balance between the 5th and month-end. The rate is revised quarterly by the government and has been 7.1% since April 2020.",
+    ],
+    howToUse: [
+      "Enter your planned yearly deposit (₹500 minimum, ₹1.5 lakh maximum).",
+      "Keep the current 7.1% rate unless the government revises it.",
+      "Use 15 years for first maturity, or 20/25/30 if you plan extensions.",
+    ],
+    faqs: [
+      { q: "What is the current PPF interest rate?", a: "7.1% per annum compounded yearly (April 2020 onward, reviewed quarterly). This calculator defaults to 7.1% — update it if rates change." },
+      { q: "Can I withdraw before 15 years?", a: "Partial withdrawals are allowed from the 7th year and loans from the 3rd–6th year under strict limits; full closure before 15 years is allowed only on narrow grounds (medical, education) with a 1% interest penalty." },
+      { q: "Is PPF interest taxable?", a: "No. PPF enjoys EEE treatment — deposits get 80C deduction up to ₹1.5 lakh, yearly interest is exempt, and maturity proceeds are fully tax-free." },
+    ],
+    relatedSlugs: ["sip-calculator", "fd-calculator", "rd-calculator", "retirement-corpus-calculator"],
+    seoTitle: "PPF Calculator — Maturity & Tax-Free Interest (7.1%)",
+  },
 ];
