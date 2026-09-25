@@ -598,4 +598,60 @@ export const FINANCE_CALCULATORS: CalculatorDefinition[] = [
     relatedSlugs: ["sip-calculator", "fd-calculator", "rd-calculator", "retirement-corpus-calculator"],
     seoTitle: "PPF Calculator — Maturity & Tax-Free Interest (7.1%)",
   },
+
+  {
+    slug: "ssy-calculator",
+    name: "SSY Calculator",
+    icon: "👧",
+    category: "investments",
+    description: "Sukanya Samriddhi Yojana maturity at 8.2% — 15 deposits, 21-year maturity.",
+    keywords: ["ssy", "sukanya samriddhi", "sukanya yojana", "ssy interest rate", "सुकन्या"],
+    popularity: 90,
+    published: true,
+    inputs: [
+      { kind: "number", name: "deposit", label: "Yearly deposit (₹)", min: 250, max: 150000, step: 1000, placeholder: "e.g. 150000", defaultValue: 150000 },
+      { kind: "number", name: "rate", label: "Interest rate (% per year)", min: 0.1, step: 0.1, placeholder: "e.g. 8.2", defaultValue: 8.2 },
+    ],
+    calculate(v) {
+      const dep = num(v.deposit);
+      const rate = num(v.rate);
+      if (dep === null || dep < 250 || dep > 150000)
+        return { error: "Yearly deposit must be between ₹250 and ₹1,50,000." };
+      if (rate === null || rate <= 0 || rate > 15)
+        return { error: "Please enter a valid interest rate (0–15%)." };
+      const r = rate / 100;
+      const depYears = 15;
+      const totalYears = 21;
+      // Deposits at the start of each year for 15 years, then 6 years of compounding only.
+      const at15 = dep * ((Math.pow(1 + r, depYears) - 1) / r) * (1 + r);
+      const fv = at15 * Math.pow(1 + r, totalYears - depYears);
+      const invested = dep * depYears;
+      return {
+        rows: [
+          { label: "Maturity value (tax-free)", value: money(fv), emphasis: true },
+          { label: "Total deposits (15 years)", value: inr0(invested) },
+          { label: "Total interest earned", value: inr0(fv - invested) },
+          { label: "Interest as % of deposits", value: pct(((fv - invested) / invested) * 100, 1) },
+        ],
+        note: `${depYears} yearly deposits of ${inr0(dep)} at ${pct(rate)} compounded annually; maturity after ${totalYears} years.`,
+      };
+    },
+    formula: "FV₁₅ = D × (((1+r)^15 − 1) ÷ r) × (1+r); Maturity = FV₁₅ × (1+r)^6 (deposits at year-start).",
+    about: [
+      "Sukanya Samriddhi Yojana (SSY) is a government-backed savings scheme for a girl child, offering EEE tax benefits like PPF. Deposits run for 15 financial years from account opening and the account matures after 21 years (or on marriage after age 18).",
+      "Interest compounds yearly and is notified quarterly — 8.2% since January 2024. Only one account per girl child (max two girls per family, with an exception for twins/triplets) with deposits between ₹250 and ₹1.5 lakh per year.",
+    ],
+    howToUse: [
+      "Enter your planned yearly deposit (₹250 minimum, ₹1.5 lakh maximum).",
+      "Keep the current 8.2% rate unless revised by the government.",
+      "Maturity assumes deposits for the first 15 years and payout at 21 years.",
+    ],
+    faqs: [
+      { q: "What is the current SSY interest rate?", a: "8.2% per annum compounded yearly (January 2024 onward, reviewed quarterly). Update the rate field if the government revises it." },
+      { q: "How long do I deposit vs when does it mature?", a: "You deposit for 15 years from opening; the account keeps earning interest until 21 years, when the full tax-free maturity is paid." },
+      { q: "Is SSY interest taxable?", a: "No — like PPF, SSY has EEE status: 80C deduction on deposits, tax-free interest, tax-free maturity." },
+    ],
+    relatedSlugs: ["ppf-calculator", "sip-calculator", "fd-calculator", "rd-calculator"],
+    seoTitle: "SSY Calculator — Sukanya Samriddhi Maturity (8.2%)",
+  },
 ];
