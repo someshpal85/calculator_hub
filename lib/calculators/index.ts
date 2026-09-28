@@ -52,6 +52,8 @@ export function categoryCounts(): Record<string, number> {
 export const POPULAR_SLUGS: string[] = [
   "emi-calculator",
   "sip-calculator",
+  "ppf-calculator",
+  "ssy-calculator",
   "gst-calculator",
   "age-calculator",
   "bmi-calculator",

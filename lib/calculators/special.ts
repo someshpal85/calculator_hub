@@ -58,7 +58,7 @@ export const SPECIAL_CALCULATORS: CalculatorDefinition[] = [
     icon: "💱",
     category: "currency",
     description: "Live exchange rates for 25+ world currencies from ECB data.",
-    keywords: ["currency converter", "exchange rate", "usd to inr", "eur gbp", "forex", "मुद्रा", "dollar", "rupaye"],
+    keywords: ["currency converter", "exchange rate", "usd to inr", "eur gbp", "forex", "ecb", "मुद्रा", "dollar", "rupaye"],
     popularity: 92,
     published: true,
     inputs: [],
@@ -74,6 +74,7 @@ export const SPECIAL_CALCULATORS: CalculatorDefinition[] = [
       "Check the rate timestamp; ECB rates update once per business day.",
     ],
     faqs: [
+      { q: "What is the ECB rate used here?", a: "The European Central Bank publishes daily euro reference rates against ~30 world currencies. This converter fetches those ECB-based rates and shows the rate date with every result." },
       { q: "Why isn't my currency listed?", a: "The ECB reference set covers ~30 freely-traded currencies. Exotic pairs would require additional data sources with different licensing." },
       { q: "Can I use this offline?", a: "No — this is the one Calculator ProHub tool needing internet, since rates change daily. Everything else works fully offline." },
     ],
