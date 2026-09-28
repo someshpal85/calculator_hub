@@ -60,7 +60,7 @@ export const CONVERSION_CALCULATORS: CalculatorDefinition[] = [
   makeConverter("length", {
     label: "Length",
     icon: "📏",
-    keywords: ["length", "distance", "cm inch feet metre mile km"],
+    keywords: ["length", "length converter", "distance", "cm inch feet metre mile km", "लंबाई"],
     units: {
       "Millimeter (mm)": 0.001,
       "Centimeter (cm)": 0.01,
